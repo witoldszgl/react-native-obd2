@@ -57,7 +57,6 @@ public class ReactNativeOBD2Module extends ReactContextBaseJavaModule {
   public ReactNativeOBD2Module(ReactApplicationContext reactContext) {
     super(reactContext);
     mReactContext = reactContext;
-    Log.d(TAG, "ReactNativeOBD2Module constructor called.");
   }
 
   @Override
@@ -65,80 +64,74 @@ public class ReactNativeOBD2Module extends ReactContextBaseJavaModule {
     return "JetBridge_OBDII";
   }
 
+
   @ReactMethod
   public void ready() {
-    Log.d(TAG, "ready() method called.");
     if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     mOBD2Handler.ready();
   }
 
   @ReactMethod
   public void getBluetoothDeviceName(Promise aPromise) {
-    Log.d(TAG, "getBluetoothDeviceName() method called.");
     if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     try {
       Set<BluetoothDevice> pairedDevices = mOBD2Handler.getBondedDevices();
-      WritableArray deviceList = Arguments.createArray();
-      Log.d(TAG, "Found " + pairedDevices.size() + " paired Bluetooth devices.");
+      WritableArray deviceList = mArguments.createArray();
       if (pairedDevices.size() > 0) {
         for (BluetoothDevice device : pairedDevices) {
-          WritableMap map = Arguments.createMap();
+          WritableMap map = mArguments.createMap();
           map.putString("name", device.getName());
           map.putString("address", device.getAddress());
           deviceList.pushMap(map);
-          Log.d(TAG, "Device found: " + device.getName() + " (" + device.getAddress() + ")");
         }
       }
+
       aPromise.resolve(deviceList);
     } catch (IOException e) {
-      Log.e(TAG, "IOException in getBluetoothDeviceName:", e);
+      e.printStackTrace();
       aPromise.reject(TAG, e);
     }
   }
 
   @ReactMethod
   public void setMockUpMode(boolean enabled) {
-    Log.d(TAG, "setMockUpMode() called with value: " + enabled);
     if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     mOBD2Handler.setMockUpMode(enabled);
   }
 
   @ReactMethod
   public void setRemoteDeviceAddress(String remoteDeviceAddress) {
-    Log.d(TAG, "setRemoteDeviceAddress() called with address: " + remoteDeviceAddress);
-    if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
+     if (mOBD2Handler == null) {
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     mOBD2Handler.setRemoteDeviceName(remoteDeviceAddress);
   }
 
   @ReactMethod
   public void startLiveData() {
-    Log.d(TAG, "startLiveData() method called.");
     if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     mOBD2Handler.startLiveData();
   }
 
   @ReactMethod
   public void stopLiveData() {
-    Log.d(TAG, "stopLiveData() method called.");
     if (mOBD2Handler == null) {
-      Log.d(TAG, "mOBD2Handler is null, creating new instance.");
       mOBD2Handler = new OBD2Handler(mReactContext);
     }
+
     mOBD2Handler.stopLiveData();
   }
 }
