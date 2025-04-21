@@ -44,7 +44,8 @@ public final class ObdConfig {
 
         cmds.add(new LoadCommand());
         cmds.add(new RPMCommand());
-
+        cmds.add(new ThrottlePositionCommand());
+        cmds.add(new ConsumptionRateCommand());
         // cmds.add(new AverageFuelEconomyObdCommand());
         // cmds.add(new FuelEconomyCommand());
 
